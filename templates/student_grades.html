@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}My Grades{% endblock %}
+
+{% block content %}
+<h1 class="page-title">🎓 My Grades</h1>
+<p style="color: var(--text-secondary); margin-bottom: 20px;">
+    Student: <strong style="color: var(--text-primary);">{{ student[1] }}</strong> |
+    Course: <strong style="color: var(--text-primary);">{{ student[6] or 'Not enrolled' }}</strong>
+</p>
+
+{% if grades %}
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card-dark text-center">
+                <h5>Total Subjects</h5>
+                <div class="value">{{ grades|length }}</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-dark text-center">
+                <h5>Average Marks</h5>
+                <div class="value">
+                    {% set total = namespace(val=0, count=0) %}
+                    {% for g in grades %}
+                        {% if g[0] %}
+                            {% set total.val = total.val + g[0] %}
+                            {% set total.count = total.count + 1 %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if total.count > 0 %}
+                        {{ (total.val / total.count)|round(1) }}%
+                    {% else %}N/A{% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-dark text-center">
+                <h5>Graded Subjects</h5>
+                <div class="value">{{ grades|selectattr(1)|list|length }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-dark">
+        <table class="table-dark-custom w-100">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Module</th>
+                    <th>Subject</th>
+                    <th>Marks</th>
+                    <th>Grade</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for g in grades %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ g[3] }}</td>
+                    <td>{{ g[2] }}</td>
+                    <td>{{ g[0] if g[0] else '-' }}</td>
+                    <td>
+                        {% if g[1] %}
+                            <span class="badge
+                                {% if g[1] in ['A+', 'A', 'A-'] %}bg-success
+                                {% elif g[1] in ['B+', 'B', 'B-'] %}bg-primary
+                                {% elif g[1] in ['C+', 'C', 'C-'] %}bg-warning
+                                {% elif g[1] == 'D' %}bg-secondary
+                                {% else %}bg-danger{% endif %}">
+                                {{ g[1] }}
+                            </span>
+                        {% else %}
+                            <span style="color: var(--text-secondary);">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if g[0] %}
+                            {% if g[0] >= 75 %}
+                                <span style="color: #22c55e;">✅ Pass</span>
+                            {% elif g[0] >= 50 %}
+                                <span style="color: #f59e0b;">⚠️ Average</span>
+                            {% else %}
+                                <span style="color: #ef4444;">❌ Fail</span>
+                            {% endif %}
+                        {% else %}
+                            <span style="color: var(--text-secondary);">Pending</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="card-dark text-center" style="padding: 50px;">
+        <h5 style="color: var(--text-secondary);">No grades yet!</h5>
+        <p style="color: var(--text-secondary);">Your grades will appear here once your lecturer assigns them.</p>
+    </div>
+{% endif %}
+
+<br>
+<a href="/student/{{ student[0] }}" class="btn btn-secondary">← Back to Profile</a>
+{% endblock %}

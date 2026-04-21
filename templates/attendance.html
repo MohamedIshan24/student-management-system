@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Mark Attendance{% endblock %}
+
+{% block content %}
+<h1 class="page-title">📅 Mark Attendance</h1>
+
+<div class="card-dark">
+    <form method="POST" action="/attendance/mark">
+        <table class="table-dark-custom w-100">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student[1] }}</td>
+                    <td>
+                        {% if student[0] in attendance_dict %}
+                            <span class="badge bg-success">{{ attendance_dict[student[0]] }}</span>
+                        {% else %}
+                            <select name="{{ student[0] }}" class="form-control" style="max-width: 150px;">
+                                <option value="Present">Present</option>
+                                <option value="Absent">Absent</option>
+                            </select>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <button type="submit" class="btn btn-success w-100">💾 Save Attendance</button>
+    </form>
+</div>
+{% endblock %}

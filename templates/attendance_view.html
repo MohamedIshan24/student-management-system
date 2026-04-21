@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}My Attendance{% endblock %}
+
+{% block content %}
+<h1 class="page-title">📅 My Attendance</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card-dark text-center">
+            <h5>Total Days</h5>
+            <div class="value">{{ total }}</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card-dark text-center">
+            <h5>Present Days</h5>
+            <div class="value" style="color: #22c55e;">{{ present }}</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card-dark text-center">
+            <h5>Attendance %</h5>
+            <div class="value" style="color:
+                {% if percentage >= 75 %}#22c55e
+                {% elif percentage >= 50 %}#f59e0b
+                {% else %}#ef4444{% endif %};">
+                {{ percentage|round(1) }}%
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card-dark mt-4">
+    <div style="background: var(--bg-primary); border-radius: 8px; overflow: hidden; height: 20px;">
+        <div style="width: {{ percentage }}%; height: 100%; background:
+            {% if percentage >= 75 %}#22c55e
+            {% elif percentage >= 50 %}#f59e0b
+            {% else %}#ef4444{% endif %};
+            transition: width 0.5s ease;">
+        </div>
+    </div>
+    <p style="color: var(--text-secondary); margin-top: 10px; font-size: 13px; text-align: center;">
+        {% if percentage >= 75 %}
+            ✅ Good attendance! Keep it up.
+        {% elif percentage >= 50 %}
+            ⚠️ Average attendance. Try to attend more classes.
+        {% else %}
+            ❌ Low attendance. Please attend more classes.
+        {% endif %}
+    </p>
+</div>
+
+<br>
+<a href="/student/{{ session.get('student_id') }}" class="btn btn-secondary">← Back to Profile</a>
+{% endblock %}

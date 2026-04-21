@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Materials - {{ subject[2] }}{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/courses">Courses</a></li>
+        <li class="breadcrumb-item"><a href="/course/{{ course[0] }}/modules">{{ course[1] }}</a></li>
+        <li class="breadcrumb-item"><a href="/module/{{ module[0] }}/subjects">{{ module[2] }}</a></li>
+        <li class="breadcrumb-item active" style="color: var(--text-secondary);">{{ subject[2] }}</li>
+    </ol>
+</nav>
+
+<h1 class="page-title">📄 {{ subject[2] }} — Materials</h1>
+
+<div class="card-dark mb-4">
+    <form method="POST" action="/subject/{{ subject[0] }}/material/add"
+          enctype="multipart/form-data" class="row g-2">
+        <div class="col-md-4">
+            <input type="text" class="form-control" name="title"
+                   placeholder="Material Title (e.g. Week 1 Notes)" required>
+        </div>
+        <div class="col-md-6">
+            <input type="file" class="form-control" name="file"
+                   accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.zip,.mp4,.mkv,.avi,.mov,.webm">
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-success w-100">⬆️ Upload</button>
+        </div>
+    </form>
+</div>
+
+<div class="card-dark">
+    {% if materials %}
+        <table class="table-dark-custom w-100">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>File</th>
+                    <th>Uploaded</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for material in materials %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ material[2] }}</td>
+                    <td>
+                        {% if material[3] %}
+                            {% set ext = material[3].rsplit('.', 1)[-1].lower() %}
+                            {% if ext in ['mp4', 'mkv', 'avi', 'mov', 'webm'] %}
+                                <a href="/static/materials/{{ material[3] }}" target="_blank"
+                                   class="btn btn-success btn-sm">🎬 Watch</a>
+                            {% elif ext == 'pdf' %}
+                                <a href="/static/materials/{{ material[3] }}" target="_blank"
+                                   class="btn btn-danger btn-sm">📕 View PDF</a>
+                            {% else %}
+                                <a href="/static/materials/{{ material[3] }}" target="_blank"
+                                   class="btn btn-info btn-sm">📥 Download</a>
+                            {% endif %}
+                        {% else %}
+                            <span style="color: var(--text-secondary);">No file</span>
+                        {% endif %}
+                    </td>
+                    <td style="color: var(--text-secondary);">{{ material[4] }}</td>
+                    <td>
+                        <a href="/material/delete/{{ material[0] }}" class="btn btn-danger btn-sm"
+                           onclick="return confirm('Delete this material?')">🗑️</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p style="color: var(--text-secondary); text-align:center; padding:30px;">
+            No materials yet — upload one above!
+        </p>
+    {% endif %}
+</div>
+{% endblock %}

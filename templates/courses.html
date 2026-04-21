@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Courses{% endblock %}
+
+{% block content %}
+<h1 class="page-title">📚 Manage Courses</h1>
+
+<div class="card-dark mb-4">
+    <form method="POST" action="/course/add" class="row g-2">
+        <div class="col-md-5">
+            <input type="text" class="form-control" name="name" placeholder="Course Name" required>
+        </div>
+        <div class="col-md-5">
+            <input type="text" class="form-control" name="description" placeholder="Description (optional)">
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-success w-100">➕ Add</button>
+        </div>
+    </form>
+</div>
+
+<div class="card-dark">
+    <table class="table-dark-custom w-100">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Course Name</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in courses %}
+            <tr>
+                <td>{{ course[0] }}</td>
+                <td>{{ course[1] }}</td>
+                <td>{{ course[2] or '-' }}</td>
+                <td>
+                    <a href="/course/{{ course[0] }}/modules" class="btn btn-primary btn-sm">📚 Modules</a>
+                    <a href="/course/delete/{{ course[0] }}" class="btn btn-danger btn-sm"
+                       onclick="return confirm('Delete this course?')">🗑️</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" style="text-align:center; color: var(--text-secondary); padding:20px;">
+                    No courses yet
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

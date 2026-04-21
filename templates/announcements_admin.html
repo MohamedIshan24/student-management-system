@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}Announcements{% endblock %}
+
+{% block content %}
+<h1 class="page-title">📢 Manage Announcements</h1>
+
+<div class="card-dark mb-4">
+    <h5 style="color: var(--text-primary); margin-bottom: 15px;">Post New Announcement</h5>
+    <form method="POST" action="/announcement/add">
+        <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input type="text" class="form-control" name="title" placeholder="Announcement title" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Content</label>
+            <textarea class="form-control" name="content" rows="3"
+                      placeholder="Write announcement here..." required></textarea>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Type</label>
+                <select class="form-control" name="type" id="annType" onchange="toggleCourse()">
+                    <option value="general">📢 General (All Students)</option>
+                    <option value="course">📚 Course Specific</option>
+                </select>
+            </div>
+            <div class="col-md-6 mb-3" id="courseDiv" style="display:none;">
+                <label class="form-label">Select Course</label>
+                <select class="form-control" name="course_id">
+                    <option value="">-- Select Course --</option>
+                    {% for course in courses %}
+                        <option value="{{ course[0] }}">{{ course[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success w-100">📢 Post Announcement</button>
+    </form>
+</div>
+
+<div class="card-dark">
+    <h5 style="color: var(--text-primary); margin-bottom: 15px;">All Announcements</h5>
+    {% if announcements %}
+        {% for ann in announcements %}
+        <div style="background: var(--bg-primary); border-radius:10px; padding:15px;
+                    margin-bottom:15px; border-left: 4px solid
+                    {% if ann[3] == 'general' %}#22c55e{% else %}#6366f1{% endif %};">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <div class="d-flex gap-2 mb-2 flex-wrap">
+                        <span class="badge {% if ann[3] == 'general' %}bg-success{% else %}bg-primary{% endif %}">
+                            {% if ann[3] == 'general' %}📢 General — All Students
+                            {% else %}📚 Course: {{ ann[6] or 'Unknown' }}{% endif %}
+                        </span>
+                        <span class="badge bg-secondary">🕐 {{ ann[5] }}</span>
+                    </div>
+                    <h5 style="color: var(--text-primary);">{{ ann[1] }}</h5>
+                    <p style="color: var(--text-secondary);">
+                        {{ ann[2][:100] }}{% if ann[2]|length > 100 %}...{% endif %}
+                    </p>
+                    <div class="d-flex gap-2 mt-2">
+                        <a href="/announcement/{{ ann[0] }}" class="btn btn-primary btn-sm">📖 Read More</a>
+                        <a href="/announcement/delete/{{ ann[0] }}" class="btn btn-danger btn-sm"
+                           onclick="return confirm('Delete this announcement?')">🗑️ Delete</a>
+                    </div>
+                    <small style="color: var(--text-secondary); display:block; margin-top:8px;">
+                        {% if ann[3] == 'course' %}
+                            👥 Only visible to <strong>{{ ann[6] }}</strong> students
+                        {% else %}
+                            👥 Visible to <strong>all students</strong>
+                        {% endif %}
+                    </small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p style="color: var(--text-secondary); text-align:center; padding:30px;">No announcements yet!</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function toggleCourse() {
+        const type = document.getElementById('annType').value;
+        document.getElementById('courseDiv').style.display = type === 'course' ? 'block' : 'none';
+    }
+</script>
+{% endblock %}

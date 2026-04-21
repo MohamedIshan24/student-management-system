@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Subjects - {{ module[2] }}{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/courses">Courses</a></li>
+        <li class="breadcrumb-item"><a href="/course/{{ course[0] }}/modules">{{ course[1] }}</a></li>
+        <li class="breadcrumb-item active" style="color: var(--text-secondary);">{{ module[2] }}</li>
+    </ol>
+</nav>
+
+<h1 class="page-title">📝 {{ module[2] }} — Subjects</h1>
+
+<div class="card-dark mb-4">
+    <form method="POST" action="/module/{{ module[0] }}/subject/add" class="row g-2">
+        <div class="col-md-5">
+            <input type="text" class="form-control" name="name"
+                   placeholder="Subject Name (e.g. Programming)" required>
+        </div>
+        <div class="col-md-5">
+            <input type="text" class="form-control" name="description" placeholder="Description (optional)">
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-success w-100">➕ Add</button>
+        </div>
+    </form>
+</div>
+
+{% if subjects %}
+    <div class="row">
+        {% for subject in subjects %}
+        <div class="col-md-6 mb-3">
+            <div class="card-dark">
+                <h5 style="color: var(--text-primary);">📘 {{ subject[2] }}</h5>
+                {% if subject[3] %}
+                    <p style="color: var(--text-secondary); font-size: 13px;">{{ subject[3] }}</p>
+                {% endif %}
+                <div class="d-flex gap-2 flex-wrap mt-2">
+                    <a href="/subject/{{ subject[0] }}/materials" class="btn btn-info btn-sm">📄 Materials</a>
+                    <a href="/subject/{{ subject[0] }}/grades" class="btn btn-warning btn-sm">🎓 Grades</a>
+                    <a href="/subject/delete/{{ subject[0] }}" class="btn btn-danger btn-sm"
+                       onclick="return confirm('Delete this subject?')">🗑️</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="card-dark text-center" style="color: var(--text-secondary); padding: 40px;">
+        No subjects yet — add one above!
+    </div>
+{% endif %}
+{% endblock %}

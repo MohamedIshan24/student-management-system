@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<h1 class="page-title">📊 Admin Dashboard</h1>
+
+<!-- Stat Cards -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card-dark">
+            <h5>Total Students</h5>
+            <div class="value">{{ total }}</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card-dark">
+            <h5>Total Courses</h5>
+            <div class="value">{{ courses|length }}</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card-dark">
+            <h5>Active Users</h5>
+            <div class="value">{{ total }}</div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card-dark">
+            <h5>Students by Course</h5>
+            <canvas id="barChart"></canvas>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card-dark">
+            <h5>Course Distribution</h5>
+            <canvas id="pieChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Students -->
+<div class="card-dark">
+    <h5>Recent Students</h5>
+    {% if recent_students %}
+    <table class="table-dark-custom w-100 mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Reg No</th>
+                <th>Email</th>
+                <th>Course</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in recent_students %}
+            <tr>
+                <td>{{ s[0] }}</td>
+                <td>{{ s[1] }}</td>
+                <td>{{ s[2] }}</td>
+                <td>{{ s[3] }}</td>
+                <td>{{ s[6] or '-' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p style="color: var(--text-secondary); text-align:center; padding:20px;">No students yet!</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // @ts-nocheck
+    const labels = {{ courses | map(attribute=0) | list | tojson | safe }};
+    const data = {{ courses | map(attribute=1) | list | tojson | safe }};
+
+    new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Students',
+                data: data,
+                backgroundColor: 'rgba(99, 102, 241, 0.7)',
+                borderColor: 'rgba(99, 102, 241, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+                y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+            }
+        }
+    });
+
+    new Chart(document.getElementById('pieChart'), {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: [
+                    'rgba(99, 102, 241, 0.8)',
+                    'rgba(34, 197, 94, 0.8)',
+                    'rgba(245, 158, 11, 0.8)',
+                    'rgba(239, 68, 68, 0.8)',
+                    'rgba(59, 130, 246, 0.8)',
+                    'rgba(168, 85, 247, 0.8)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { labels: { color: '#94a3b8' } } }
+        }
+    });
+</script>
+{% endblock %}

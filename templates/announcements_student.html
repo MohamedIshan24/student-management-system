@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Announcements{% endblock %}
+
+{% block content %}
+<h1 class="page-title">📢 Announcements</h1>
+
+{% if announcements %}
+    {% for ann in announcements %}
+    <div style="background: var(--bg-secondary); border-radius:10px; padding:15px;
+                margin-bottom:15px; border-left: 4px solid
+                {% if ann[3] == 'general' %}#22c55e{% else %}#6366f1{% endif %};">
+        <div class="d-flex gap-2 mb-2 flex-wrap">
+            <span class="badge {% if ann[3] == 'general' %}bg-success{% else %}bg-primary{% endif %}">
+                {% if ann[3] == 'general' %}📢 General{% else %}📚 Course{% endif %}
+            </span>
+            <span class="badge bg-secondary">🕐 {{ ann[5] }}</span>
+        </div>
+        <h5 style="color: var(--text-primary);">{{ ann[1] }}</h5>
+        <p style="color: var(--text-secondary);">
+            {{ ann[2][:100] }}{% if ann[2]|length > 100 %}...{% endif %}
+        </p>
+        <a href="/announcement/{{ ann[0] }}" class="btn btn-primary btn-sm">📖 Read More</a>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="card-dark text-center" style="padding: 50px;">
+        <h5 style="color: var(--text-secondary);">No announcements yet!</h5>
+        <p style="color: var(--text-secondary);">Check back later for updates.</p>
+    </div>
+{% endif %}
+
+<br>
+<a href="/student/{{ session.get('student_id') }}" class="btn btn-secondary">← Back to Profile</a>
+{% endblock %}

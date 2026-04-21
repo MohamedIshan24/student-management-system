@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}Student Profile{% endblock %}
+
+{% block content %}
+<h1 class="page-title">👤 Student Profile</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card-dark text-center">
+            {% if student[11] and student[11] != 'None' %}
+                <img src="{{ url_for('static', filename='uploads/' + student[11]) }}"
+                     width="130" height="130"
+                     class="rounded-circle mb-3 shadow"
+                     style="object-fit: cover; border: 3px solid #6366f1;">
+            {% else %}
+                <div style="width:130px; height:130px; border-radius:50%;
+                            background: rgba(99,102,241,0.2); display:flex;
+                            align-items:center; justify-content:center;
+                            margin: auto 0 15px; font-size:55px;">
+                    👤
+                </div>
+            {% endif %}
+            <h4 style="color: var(--text-primary);">{{ student[1] }}</h4>
+            <p style="color: var(--text-secondary);">{{ student[6] or 'No Course' }}</p>
+            <hr style="border-color: var(--border);">
+            <div class="d-grid gap-2">
+                <a href="/student/edit/{{ student[0] }}" class="btn btn-warning btn-sm">✏️ Edit Profile</a>
+                <a href="/student/{{ student[0] }}/grades" class="btn btn-success btn-sm">🎓 My Grades</a>
+                <a href="/student/{{ student[0] }}/materials" class="btn btn-info btn-sm">📚 My Materials</a>
+                <a href="/change_password" class="btn btn-secondary btn-sm">🔒 Change Password</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card-dark">
+            <h5 style="color: var(--accent); margin-bottom: 20px;">📋 Personal Information</h5>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Register No</label>
+                    <p style="color: var(--text-primary);">{{ student[2] if student[2] and student[2] != 'None' else '-' }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Email</label>
+                    <p style="color: var(--text-primary);">{{ student[3] if student[3] and student[3] != 'None' else '-' }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">NIC</label>
+                    <p style="color: var(--text-primary);">{{ student[4] if student[4] and student[4] != 'None' else '-' }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Address</label>
+                    <p style="color: var(--text-primary);">{{ student[5] if student[5] and student[5] != 'None' else '-' }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Course</label>
+                    <p style="color: var(--text-primary);">
+                        {% if student[6] and student[6] != 'None' %}
+                            <span class="badge bg-primary">{{ student[6] }}</span>
+                        {% else %}-{% endif %}
+                    </p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Religion</label>
+                    <p style="color: var(--text-primary);">{{ student[9] if student[9] and student[9] != 'None' else '-' }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Father Name</label>
+                    <p style="color: var(--text-primary);">{{ student[7] if student[7] and student[7] != 'None' else '-' }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Mother Name</label>
+                    <p style="color: var(--text-primary);">{{ student[8] if student[8] and student[8] != 'None' else '-' }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Sports</label>
+                    <p style="color: var(--text-primary);">{{ student[10] if student[10] and student[10] != 'None' else '-' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

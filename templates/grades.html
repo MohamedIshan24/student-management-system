@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Grades - {{ subject[2] }}{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/courses">Courses</a></li>
+        <li class="breadcrumb-item"><a href="/course/{{ course[0] }}/modules">{{ course[1] }}</a></li>
+        <li class="breadcrumb-item"><a href="/module/{{ module[0] }}/subjects">{{ module[2] }}</a></li>
+        <li class="breadcrumb-item active" style="color: var(--text-secondary);">{{ subject[2] }} Grades</li>
+    </ol>
+</nav>
+
+<h1 class="page-title">🎓 {{ subject[2] }} — Grades</h1>
+<p style="color: var(--text-secondary); margin-bottom: 20px;">Course: <strong style="color: var(--text-primary);">{{ course[1] }}</strong></p>
+
+<div class="card-dark">
+    {% if students %}
+    <form method="POST" action="/subject/{{ subject[0] }}/grades/save">
+        <table class="table-dark-custom w-100">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Reg No</th>
+                    <th>Marks (0-100)</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>
+                        {{ student[1] }}
+                        <input type="hidden" name="student_id" value="{{ student[0] }}">
+                    </td>
+                    <td>{{ student[2] }}</td>
+                    <td>
+                        <input type="number" class="form-control" min="0" max="100"
+                               name="marks_{{ student[0] }}"
+                               value="{{ grades_dict[student[0]][3] if student[0] in grades_dict else '' }}"
+                               placeholder="Enter marks" style="max-width: 120px;">
+                    </td>
+                    <td>
+                        <select class="form-control" name="grade_{{ student[0] }}" style="max-width: 120px;">
+                            <option value="">-- Grade --</option>
+                            {% set current_grade = grades_dict[student[0]][2] if student[0] in grades_dict else '' %}
+                            <option {% if current_grade == 'A+' %}selected{% endif %}>A+</option>
+                            <option {% if current_grade == 'A' %}selected{% endif %}>A</option>
+                            <option {% if current_grade == 'A-' %}selected{% endif %}>A-</option>
+                            <option {% if current_grade == 'B+' %}selected{% endif %}>B+</option>
+                            <option {% if current_grade == 'B' %}selected{% endif %}>B</option>
+                            <option {% if current_grade == 'B-' %}selected{% endif %}>B-</option>
+                            <option {% if current_grade == 'C+' %}selected{% endif %}>C+</option>
+                            <option {% if current_grade == 'C' %}selected{% endif %}>C</option>
+                            <option {% if current_grade == 'C-' %}selected{% endif %}>C-</option>
+                            <option {% if current_grade == 'D' %}selected{% endif %}>D</option>
+                            <option {% if current_grade == 'F' %}selected{% endif %}>F</option>
+                        </select>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <button type="submit" class="btn btn-success w-100">💾 Save All Grades</button>
+    </form>
+    {% else %}
+        <div style="text-align:center; color: var(--text-secondary); padding: 40px;">
+            <h5>No students enrolled in {{ course[1] }} yet!</h5>
+            <p>Students need to select this course from their profile first.</p>
+            <a href="/students" class="btn btn-primary">Go to Students</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

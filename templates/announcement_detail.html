@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}{{ ann[1] }}{% endblock %}
+
+{% block content %}
+<h1 class="page-title">📢 Announcement</h1>
+
+<div class="card-dark" style="max-width: 750px; margin: auto;">
+    <div class="d-flex gap-2 mb-3 flex-wrap">
+        <span class="badge {% if ann[3] == 'general' %}bg-success{% else %}bg-primary{% endif %}">
+            {% if ann[3] == 'general' %}📢 General — All Students
+            {% else %}📚 Course: {{ ann[6] or 'Course' }}{% endif %}
+        </span>
+        <span class="badge bg-secondary">🕐 {{ ann[5] }}</span>
+    </div>
+
+    <h2 style="color: var(--text-primary); margin-bottom: 15px;">{{ ann[1] }}</h2>
+    <hr style="border-color: var(--border);">
+    <p style="font-size: 16px; line-height: 1.8; color: var(--text-primary);
+              white-space: pre-wrap;">{{ ann[2] }}</p>
+    <hr style="border-color: var(--border);">
+    <a href="/announcements" class="btn btn-secondary">← Back to Announcements</a>
+</div>
+{% endblock %}

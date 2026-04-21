@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<h1 class="page-title">✏️ Edit My Profile</h1>
+
+<div class="card-dark" style="max-width: 650px; margin: auto;">
+    <form method="POST" action="/student/update/{{ student[0] }}" enctype="multipart/form-data">
+
+        <!-- Profile Photo -->
+        <div class="mb-4 text-center">
+            {% if student[11] and student[11] != 'None' %}
+                <img src="{{ url_for('static', filename='uploads/' + student[11]) }}"
+                     width="100" height="100"
+                     class="rounded-circle mb-2 shadow"
+                     style="object-fit:cover; border: 3px solid #6366f1;">
+            {% else %}
+                <div style="width:100px; height:100px; border-radius:50%;
+                            background: rgba(99,102,241,0.2); display:flex;
+                            align-items:center; justify-content:center;
+                            margin: auto; font-size:40px;">
+                    👤
+                </div>
+            {% endif %}
+            <div class="mt-2">
+                <label class="form-label">Profile Photo</label>
+                <input type="file" class="form-control" name="photo" accept="image/*">
+            </div>
+        </div>
+
+        <hr style="border-color: var(--border);">
+
+        <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input class="form-control" name="name" placeholder="Enter full name"
+                   value="{{ student[1] if student[1] and student[1] != 'None' else '' }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Email Address</label>
+            <input class="form-control" name="email" type="email" placeholder="Enter email"
+                   value="{{ student[3] if student[3] and student[3] != 'None' else '' }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">NIC</label>
+            <input class="form-control" name="nic" placeholder="Enter NIC number"
+                   value="{{ student[4] if student[4] and student[4] != 'None' else '' }}">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Address</label>
+            <input class="form-control" name="address" placeholder="Enter address"
+                   value="{{ student[5] if student[5] and student[5] != 'None' else '' }}">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Course</label>
+            <select class="form-control" name="course">
+                <option value="">-- Select Course --</option>
+                {% for course in courses %}
+                    <option value="{{ course[1] }}" {% if student[6] == course[1] %}selected{% endif %}>
+                        {{ course[1] }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Father Name</label>
+            <input class="form-control" name="father_name" placeholder="Enter father's name"
+                   value="{{ student[7] if student[7] and student[7] != 'None' else '' }}">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Mother Name</label>
+            <input class="form-control" name="mother_name" placeholder="Enter mother's name"
+                   value="{{ student[8] if student[8] and student[8] != 'None' else '' }}">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Religion</label>
+            <select class="form-control" name="religion">
+                <option value="">-- Select Religion --</option>
+                <option {% if student[9]=='Islam' %}selected{% endif %}>Islam</option>
+                <option {% if student[9]=='Buddhism' %}selected{% endif %}>Buddhism</option>
+                <option {% if student[9]=='Christianity' %}selected{% endif %}>Christianity</option>
+                <option {% if student[9]=='Hinduism' %}selected{% endif %}>Hinduism</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Sports</label>
+            <input class="form-control" name="sports" placeholder="Enter sports activity"
+                   value="{{ student[10] if student[10] and student[10] != 'None' else '' }}">
+        </div>
+
+        <button class="btn btn-success w-100">💾 Update Profile</button>
+    </form>
+    <br>
+    <a href="/student/{{ student[0] }}" class="btn btn-secondary w-100">← Back to Profile</a>
+</div>
+{% endblock %}

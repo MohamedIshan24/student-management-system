@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}My Course Materials{% endblock %}
+
+{% block content %}
+<h1 class="page-title">📚 My Course Materials</h1>
+<p style="color: var(--text-secondary); margin-bottom: 20px;">
+    Student: <strong style="color: var(--text-primary);">{{ student[1] }}</strong> |
+    Course: <strong style="color: var(--text-primary);">{{ course[1] if course else 'Not enrolled' }}</strong>
+</p>
+
+{% if not course %}
+    <div class="card-dark text-center" style="padding: 50px;">
+        <h5 style="color: var(--text-secondary);">You are not enrolled in any course yet!</h5>
+        <p style="color: var(--text-secondary);">Please update your profile to select a course.</p>
+        <a href="/student/edit/{{ student[0] }}" class="btn btn-primary mt-2">✏️ Edit Profile</a>
+    </div>
+
+{% elif not modules_with_subjects %}
+    <div class="card-dark text-center" style="padding: 50px;">
+        <h5 style="color: var(--text-secondary);">No materials available yet!</h5>
+        <p style="color: var(--text-secondary);">Your lecturer hasn't uploaded any materials yet.</p>
+    </div>
+
+{% else %}
+    <div class="accordion" id="modulesAccordion">
+        {% for item in modules_with_subjects %}
+        <div class="accordion-item mb-3" style="border-radius:10px; overflow:hidden;">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed fw-bold"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#module{{ item.module[0] }}">
+                    📖 {{ item.module[2] }}
+                    {% if item.module[3] %}
+                        <small style="color: var(--text-secondary); margin-left:8px;">— {{ item.module[3] }}</small>
+                    {% endif %}
+                </button>
+            </h2>
+            <div id="module{{ item.module[0] }}" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                    {% if item.subjects %}
+                        {% for sub in item.subjects %}
+                        <div class="mb-3">
+                            <h6 class="fw-bold" style="color: var(--accent);">📘 {{ sub.subject[2] }}</h6>
+                            {% if sub.materials %}
+                                <table class="table-dark-custom w-100">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Title</th>
+                                            <th>File</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for material in sub.materials %}
+                                        <tr>
+                                            <td>{{ loop.index }}</td>
+                                            <td>{{ material[2] }}</td>
+                                            <td>
+                                                {% if material[3] %}
+                                                    {% set ext = material[3].rsplit('.', 1)[-1].lower() %}
+                                                    {% if ext in ['mp4', 'mkv', 'avi', 'mov', 'webm'] %}
+                                                        <a href="/static/materials/{{ material[3] }}"
+                                                           target="_blank" class="btn btn-success btn-sm">🎬 Watch</a>
+                                                    {% elif ext == 'pdf' %}
+                                                        <a href="/static/materials/{{ material[3] }}"
+                                                           target="_blank" class="btn btn-danger btn-sm">📕 View PDF</a>
+                                                    {% else %}
+                                                        <a href="/static/materials/{{ material[3] }}"
+                                                           target="_blank" class="btn btn-info btn-sm">📥 Download</a>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <span style="color: var(--text-secondary);">No file</span>
+                                                {% endif %}
+                                            </td>
+                                            <td style="color: var(--text-secondary);">{{ material[4] }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <p style="color: var(--text-secondary); font-size:13px;">No materials uploaded yet.</p>
+                            {% endif %}
+                        </div>
+                        {% if not loop.last %}<hr style="border-color: var(--border);">{% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p style="color: var(--text-secondary);">No subjects in this module yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<br>
+<a href="/student/{{ student[0] }}" class="btn btn-secondary">← Back to Profile</a>
+{% endblock %}

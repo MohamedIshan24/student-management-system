@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Edit Student{% endblock %}
+
+{% block content %}
+<h1 class="page-title">✏️ Edit Student</h1>
+
+<div class="card-dark">
+    <form action="/update/{{ student[0] }}" method="POST" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input class="form-control" type="text" name="name" value="{{ student[1] }}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Register Number</label>
+                    <input class="form-control" type="text" name="reg_no" value="{{ student[2] }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input class="form-control" type="email" name="email" value="{{ student[3] }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">NIC</label>
+                    <input class="form-control" type="text" name="nic" value="{{ student[4] }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Address</label>
+                    <input class="form-control" type="text" name="address" value="{{ student[5] }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Profile Picture</label>
+                    <input class="form-control" type="file" name="photo" accept="image/*">
+                    {% if student[11] %}
+                        <small style="color: var(--text-secondary);">Current:
+                            <img src="{{ url_for('static', filename='uploads/' + student[11]) }}"
+                                 height="40" class="rounded ms-1">
+                        </small>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Course</label>
+                    <select class="form-control" name="course">
+                        <option value="">-- Select Course --</option>
+                        {% for course in courses %}
+                            <option value="{{ course[1] }}" {% if student[6] == course[1] %}selected{% endif %}>
+                                {{ course[1] }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Father Name</label>
+                    <input class="form-control" type="text" name="father_name" value="{{ student[7] }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mother Name</label>
+                    <input class="form-control" type="text" name="mother_name" value="{{ student[8] }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Religion</label>
+                    <select class="form-control" name="religion">
+                        <option value="">-- Select Religion --</option>
+                        <option {% if student[9]=='Islam' %}selected{% endif %}>Islam</option>
+                        <option {% if student[9]=='Buddhism' %}selected{% endif %}>Buddhism</option>
+                        <option {% if student[9]=='Christianity' %}selected{% endif %}>Christianity</option>
+                        <option {% if student[9]=='Hinduism' %}selected{% endif %}>Hinduism</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Sports</label>
+                    <input class="form-control" type="text" name="sports" value="{{ student[10] }}">
+                </div>
+            </div>
+        </div>
+        <hr style="border-color: var(--border);">
+        <button class="btn btn-success w-100">💾 Update Student</button>
+    </form>
+</div>
+{% endblock %}

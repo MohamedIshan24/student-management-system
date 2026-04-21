@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1 class="page-title">🏠 Home</h1>
+
+<div class="card-dark text-center" style="padding: 50px;">
+    <div style="font-size: 60px; margin-bottom: 15px;">🎓</div>
+    <h2 style="color: var(--text-primary);">Welcome to EduSystem</h2>
+    <p style="color: var(--text-secondary); margin-top: 10px;">
+        Logged in as: <strong style="color: var(--accent);">{{ session.get('user') }}</strong>
+        ({{ session.get('role') }})
+    </p>
+    <div class="mt-4">
+        {% if session.get('role') == 'admin' %}
+            <a href="/students" class="btn btn-accent me-2">👥 Students</a>
+            <a href="/dashboard" class="btn btn-secondary">📊 Dashboard</a>
+        {% else %}
+            <a href="/student/{{ session.get('student_id') }}" class="btn btn-accent me-2">👤 My Profile</a>
+            <a href="/announcements" class="btn btn-secondary">📢 Announcements</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
